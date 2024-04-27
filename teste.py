@@ -1,27 +1,62 @@
-import cv2, os
+import cv2
+import face_recognition as fr 
+import os
+import numpy as np
 
-cv2path = os.path.dirname(cv2.__file__)
-
-def find(name, path):
-    for root, dirs, files in os.walk(path):
-        if(name in files) or (name in dirs):
-            return os.path.join(root, name)
-    return find(name, os.path.dirname(path))
-
-xml_path = find('haarcascade_frontalface_alt2.xml', cv2path)
-
-clf = cv2.CascadeClassifier(xml_path)
-
-cap = cv2.VideoCapture(0)
-
-while(not cv2.waitKey(20) & 0xFF == ord('q')):
-    ret, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = clf.detectMultiScale(gray)
-    for x, y, w, h in faces:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0))
+def cadastrar_rosto(nome, pasta='rostos'):
+    cap = cv2.VideoCapture(0)
     
-    cv2.imshow('frame', frame)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print('erro')
+            
+        cv2.imshow('Press Q to capture', frame)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            encode = fr.face_encodings(frame)
+            if len(encode) > 0:
+                encode = encode[0]
+                nome_arquivo = os.path.join(pasta, f'{nome}.npy')
+                np.save(nome_arquivo, encode)
+                break
+    cap.release()
+    cv2.destroyAllWindows()
+    
+def verificar_rosto(pasta='rostos'):
+    cap = cv2.VideoCapture(0)
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print('erro')
+            break
+        
+        cv2.imshow('Pres Q to capture', frame)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            encode_teste = fr.face_encodings(frame)
+            if len(encode_teste) > 0:
+                encode_teste = encode_teste[0]
+                for arquivo in os.listdir(pasta):
+                    if arquivo.endswith(".npy"):
+                        encode_salvo = np.load(os.path.join(pasta, arquivo))
+                        comparador = fr.compare_faces([encode_salvo], encode_teste)
+                        if comparador[0]:
+                            print("Rosto cadastrado")
+                            break
+                    cap.release()        
+                else:
+                    print("Rosto nao cadastrado")
+                    break
+    cap.release()
+    cv2.destroyAllWindows()
+        
+    
+escolha = input("1. Cadastrar\n2. Verificar\n\n")
 
-cap.release()
-cv2.destroyAllWindows()
+if escolha == "1":
+    nome = input("Nome: ")
+    cadastrar_rosto(nome)
+elif escolha == "2":
+    verificar_rosto()
