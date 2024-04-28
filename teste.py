@@ -53,7 +53,7 @@ def verificar_rosto(pasta='rostos'):
     cv2.destroyAllWindows()
         
     
-escolha = input("1. Cadastrar\n2. Verificar\n\n")
+escolha = input("1. Cadastrar\n2. Verificar\n")
 
 if escolha == "1":
     nome = input("Nome: ")
