@@ -1,1 +1,1 @@
-# FaceRecognizer
+# Projeto para frequencia escolar
