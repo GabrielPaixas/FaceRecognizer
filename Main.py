@@ -1,7 +1,11 @@
-from Menu import Menu
+from CadastrarFace import cadastrar_rosto
+from VerificarFace import verificar_rosto
 
-def main():
-    menu = Menu.Menu()
+while True:
+    escolha = input("1. Cadastrar\n2. Verificar\n")
 
-if __name__ == "__main__":
-    main()
+    if escolha == "1":
+        nome = input("Nome: ")
+        cadastrar_rosto(nome)
+    elif escolha == "2":
+        verificar_rosto()
