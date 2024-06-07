@@ -65,5 +65,3 @@ def verificar_rosto(pasta='rostos'):
 
     cap.release()
     cv2.destroyAllWindows()
-
-verificar_rosto()
