@@ -12,7 +12,7 @@ def verificar_rosto(pasta='rostos'):
     contador_quadros = 0
 
     encodings_salvas = []
-    nomes_encodings = []  # Lista para armazenar os nomes correspondentes aos encodings salvos
+    nomes_encodings = []  
     for arquivo in os.listdir(pasta):
         if arquivo.endswith(".npy"):
             nome = os.path.splitext(arquivo)[0]
@@ -40,14 +40,12 @@ def verificar_rosto(pasta='rostos'):
                 rostos_cadastrados = 0
                 for frame_comparar in frames_para_comparar:
                     encode_comparar = fr.face_encodings(frame_comparar)
-
-                    if len(encode_comparar) > 0:
-                        for face_encoding, face_location in zip(encode_comparar, face_locations):
-                            nome = classificar_rosto(face_encoding, encodings_salvas, nomes_encodings, frame, face_location)
-                            if nome != "Desconhecido":
-                                registrar_frequencia(nome)
-                                rostos_cadastrados += 1
-                                break
+                    for face_encoding, face_location in zip(encode_comparar, face_locations):
+                        nome = classificar_rosto(face_encoding, encodings_salvas, nomes_encodings, frame, face_location)
+                        if nome != "Desconhecido":
+                            registrar_frequencia(nome)
+                            rostos_cadastrados += 1
+                            break
 
                 if rostos_cadastrados == 5:
                     print("Entrada/Saida registrada")

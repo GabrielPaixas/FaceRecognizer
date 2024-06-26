@@ -11,3 +11,4 @@ while True:
         verificar_rosto()
     else:
         break
+        
